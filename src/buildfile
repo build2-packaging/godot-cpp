@@ -1,0 +1,54 @@
+intf_libs = # Interface dependencies.
+impl_libs = # Implementation dependencies.
+#import xxxx_libs += libhello%lib{hello}
+
+# Public headers.
+#
+pub = [dir_path] ../include/godot-cpp/
+
+include $pub
+
+pub_hdrs = $($pub/ pub_hdrs)
+
+lib{godot-cpp}: $pub/{$pub_hdrs}
+
+# Private headers and sources as well as dependencies.
+#
+lib{godot-cpp}: {hxx ixx txx cxx}{**} $impl_libs $intf_libs
+
+# Build options.
+#
+out_pfx_inc = [dir_path] $out_root/include/
+src_pfx_inc = [dir_path] $src_root/include/
+out_pfx_src = [dir_path] $out_root/src/
+src_pfx_src = [dir_path] $src_root/src/
+
+cxx.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
+                "-I$out_pfx_inc" "-I$src_pfx_inc"
+
+{hbmia obja}{*}: cxx.poptions += -DGODOT_CPP_STATIC_BUILD
+{hbmis objs}{*}: cxx.poptions += -DGODOT_CPP_SHARED_BUILD
+
+# Export options.
+#
+lib{godot-cpp}:
+{
+  cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc"
+  cxx.export.libs = $intf_libs
+}
+
+liba{godot-cpp}: cxx.export.poptions += -DGODOT_CPP_STATIC
+libs{godot-cpp}: cxx.export.poptions += -DGODOT_CPP_SHARED
+
+# For pre-releases use the complete version to make sure they cannot be used
+# in place of another pre-release or the final version. See the version module
+# for details on the version.* variable values.
+#
+if $version.pre_release
+  lib{godot-cpp}: bin.lib.version = "-$version.project_id"
+else
+  lib{godot-cpp}: bin.lib.version = "-$version.major.$version.minor"
+
+# Don't install private headers.
+#
+{hxx ixx txx}{*}: install = false
