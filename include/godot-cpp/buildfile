@@ -1,10 +1,6 @@
-pub_hdrs = {hxx ixx txx}{** -version} hxx{version}
+pub_hdrs = {hxx ixx txx}{**}
 
-./: $pub_hdrs
-
-hxx{version}: in{version} $src_root/manifest
-
-hxx{export}@./: cxx.importable = false
+./ : $pub_hdrs
 
 # Install into the godot-cpp/ subdirectory of, say, /usr/include/
 # recreating subdirectories.
