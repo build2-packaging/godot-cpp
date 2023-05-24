@@ -17,3 +17,8 @@
 # Use `binary` to make sure certain files are never auto-detected as text.
 #
 #*.png binary
+
+include/godot-cpp symlink=dir
+src/classes symlink=dir
+src/core symlink=dir
+src/variant symlink=dir

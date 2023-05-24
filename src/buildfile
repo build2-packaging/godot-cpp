@@ -4,7 +4,7 @@ impl_libs = # Implementation dependencies.
 
 # Public headers.
 #
-pub = [dir_path] ../include/godot-cpp/
+pub = [dir_path] ../include/
 
 include $pub
 
