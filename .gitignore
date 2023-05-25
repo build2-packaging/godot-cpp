@@ -29,3 +29,10 @@
 *.exe.dlls/
 *.exe.manifest
 *.pc
+
+
+# Python
+
+__pycache__/
+*.pyc
+
