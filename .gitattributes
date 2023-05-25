@@ -22,3 +22,4 @@ include/godot-cpp symlink=dir
 src/classes symlink=dir
 src/core symlink=dir
 src/variant symlink=dir
+tests/gdextension/src symlink=dir
