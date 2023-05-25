@@ -17,4 +17,4 @@ depends: * build2 >= 0.15.0
 depends: * bpkg >= 0.15.0
 
 requires: python >= 3.4 ; Python 3 used for generator scripts
-
+requires: Godot == $    ; Godot is required to run the tests
