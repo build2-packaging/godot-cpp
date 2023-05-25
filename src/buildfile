@@ -31,13 +31,13 @@ cxx.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
                 "-I$out_pfx_inc" "-I$src_pfx_inc" \
                 "-I$gdextension_dir" "-I$gdextension_gen_include_dir" "-I$gdextension_gen_src_dir"
 
-{hbmia obja}{*}: cxx.poptions += -DGODOT_CPP_STATIC_BUILD # FIXME: REPLACE THIS
+{hbmia obja}{*}: cxx.poptions += -DGODOT_CPP_STATIC_BUILD # FIXME: REPLACE THIS OR DELETE IT?
 
 # Export options.
 #
 lib{godot-cpp}:
 {
-  cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc"
+  cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc" "-I$gdextension_dir" "-I$gdextension_gen_include_dir" "-I$gdextension_gen_src_dir"
   cxx.export.libs = $intf_libs
 }
 
