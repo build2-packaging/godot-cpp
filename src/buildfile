@@ -12,9 +12,13 @@ pub_hdrs = $($pub/ pub_hdrs)
 
 ./ : liba{godot-cpp}: $pub/{$pub_hdrs}
 
+gdextension_dir = [dir_path] $src_root/upstream/gdextension/
+gdextension_gen_include_dir = [dir_path] $out_root/gen/include/
+gdextension_gen_src_dir = [dir_path] $out_root/gen/src/
+
 # Private headers and sources as well as dependencies.
 #
-liba{godot-cpp}: {hxx ixx txx cxx}{**} $impl_libs $intf_libs
+liba{godot-cpp}: {hxx ixx txx cxx}{**} hxx{gdextension_files_were_generated} $impl_libs $intf_libs
 
 # Build options.
 #
@@ -24,7 +28,8 @@ out_pfx_src = [dir_path] $out_root/src/
 src_pfx_src = [dir_path] $src_root/src/
 
 cxx.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
-                "-I$out_pfx_inc" "-I$src_pfx_inc"
+                "-I$out_pfx_inc" "-I$src_pfx_inc" \
+                "-I$gdextension_dir" "-I$gdextension_gen_include_dir" "-I$gdextension_gen_src_dir"
 
 {hbmia obja}{*}: cxx.poptions += -DGODOT_CPP_STATIC_BUILD # FIXME: REPLACE THIS
 
@@ -50,3 +55,66 @@ else
 # Don't install private headers.
 #
 {hxx ixx txx}{*}: install = false
+
+
+
+########################################################################
+# Generate Godot C++ Bindings for GDExtension
+# See ./upstream/CMakeLists.txt `GENERATED_FILES_LIST` for details
+
+# FIXME: review and fix these scripts... in particular the generation of hxx/cxx not being taken into account as target names/output
+
+gdextension_api_json = [path] $src_root/upstream/gdextension/extension_api.json
+
+file{binding_generator.py}:
+{{
+    cp $src_root/upstream/binding_generator.py $path($>)
+}}
+
+<file{print_file_list.py} file{generated_file_list.txt}>: file{binding_generator.py}
+{{
+    diag python $>
+    api_json=$regex.replace($gdextension_api_json, "\\\\", "\\\\\\\\")
+    gen_dir=$regex.replace($out_root, "\\\\", "\\\\\\\\")
+    script=$path($>[0])
+    file_list=$path($>[1])
+    echo "import binding_generator" > $script
+    echo "gdextension_api_json = \"$api_json\"" >> $script
+    echo "out_dir = \"$gen_dir\"" >> $script
+    echo "binding_generator.print_file_list\(gdextension_api_json, out_dir, headers=True, sources=True\)" >> $script
+    python $script > $file_list
+}}
+
+file{generate_gdextension_cpp_bindings.py}: file{print_file_list.py}
+{{
+    diag python $>
+    api_json=$regex.replace($gdextension_api_json, "\\\\", "\\\\\\\\")
+    gen_dir=$regex.replace($out_root, "\\\\", "\\\\\\\\")
+    echo "import binding_generator" > $path($>)
+    echo "gdextension_api_json = \"$api_json\"" >> $path($>)
+    echo "out_dir = \"$gen_dir\"" >> $path($>)
+
+    # FIXME: should be deduced from configuration variables
+    echo "arch_bits = \"64\"" >> $path($>)
+
+    # FIXME: should be an option, see GENERATE_BINDING_PARAMETERS in upstream/CMakeLists.txt
+    echo "generate_template_bindings = True" >> $path($>)
+
+    # FIXME: should be an option, see FLOAT_PRECISION in upstream/CMakeLists.txt
+    echo "float_precision = \"single\"" >> $path($>)
+
+    echo "binding_generator.generate_bindings\(gdextension_api_json, generate_template_bindings, arch_bits, float_precision, out_dir\)" >> $path($>)
+
+}}
+
+hxx{gdextension_files_were_generated}: file{generate_gdextension_cpp_bindings.py} file{generated_file_list.txt}
+{{
+    diag python $>
+
+    echo "==== Generating GDExtension C++ API files: ===="
+    cat $path($<[1])
+
+    python $path($<[0])
+
+    echo "// header just used to check that GDExtension files were generated, ignore me" > $path($>)
+}}

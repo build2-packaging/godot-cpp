@@ -1,4 +1,4 @@
-pub_hdrs = {hxx ixx txx}{**}
+pub_hdrs = godot_cpp/{hxx ixx txx}{**}
 
 ./ : $pub_hdrs
 
@@ -7,6 +7,6 @@ pub_hdrs = {hxx ixx txx}{**}
 #
 {hxx ixx txx}{*}:
 {
-  install         = include/godot-cpp/
+  install         = include/
   install.subdirs = true
 }
