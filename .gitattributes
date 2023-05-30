@@ -18,7 +18,7 @@
 #
 #*.png binary
 
-include/godot-cpp symlink=dir
+include/godot_cpp symlink=dir
 src/classes symlink=dir
 src/core symlink=dir
 src/variant symlink=dir
