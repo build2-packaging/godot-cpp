@@ -31,9 +31,13 @@ src_pfx_inc = [dir_path] $src_root/include/
 out_pfx_src = [dir_path] $out_root/src/
 src_pfx_src = [dir_path] $src_root/src/
 
-cxx.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
-                "-I$out_pfx_inc" "-I$src_pfx_inc" \
-                "-I$gdextension_dir" "-I$gdextension_gen_include_dir" "-I$gdextension_gen_src_dir"
+public_include_dirs = "-I$out_pfx_inc" "-I$src_pfx_inc" \
+                "-I$gdextension_dir" "-I$gdextension_gen_include_dir"
+
+private_include_dirs = "-I$out_pfx_src" "-I$src_pfx_src" "-I$gdextension_gen_src_dir"
+
+
+cxx.poptions =+ $public_include_dirs $private_include_dirs
 
 {hbmia obja}{*}: cxx.poptions += -DGODOT_CPP_STATIC_BUILD # FIXME: REPLACE THIS OR DELETE IT?
 
@@ -41,7 +45,7 @@ cxx.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
 #
 liba{godot-cpp}:
 {
-    cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc" "-I$gdextension_dir" "-I$gdextension_gen_include_dir" "-I$gdextension_gen_src_dir"
+    cxx.export.poptions = $public_include_dirs
     cxx.export.libs = $intf_libs
 }
 
@@ -128,3 +132,13 @@ gen_cxx{godot} : file{print_file_list.py} file{generate_gdextension_cpp_bindings
     python $generator_script_path
     echo "==== Generating GDExtension C++ API files - DONE ===="
 }}
+
+$out_root/gen/src/
+{
+    out_pfx_inc = [dir_path] $out_root/include/
+    src_pfx_inc = [dir_path] $src_root/include/
+    gdextension_gen_include_dir = [dir_path] $out_root/gen/include/
+    gdextension_dir = [dir_path] $src_root/upstream/gdextension/
+
+    cc.poptions += "-I$src_pfx_inc" "-I$out_pfx_inc" "-I$gdextension_gen_include_dir" "-I$gdextension_dir"
+}
