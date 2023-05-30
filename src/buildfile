@@ -136,18 +136,3 @@ gen_cxx{godot} : file{print_file_list.py} file{generate_gdextension_cpp_bindings
     python $generator_script_path
     echo "==== Generating GDExtension C++ API files - DONE ===="
 }}
-
-# $out_root/gen/src/
-# {
-#     out_pfx_inc = [dir_path] $out_root/include/
-#     src_pfx_inc = [dir_path] $src_root/include/
-#     gdextension_gen_include_dir = [dir_path] $out_root/gen/include/
-#     gdextension_dir = [dir_path] $src_root/upstream/gdextension/
-
-#     cc.poptions += "-I$src_pfx_inc" "-I$out_pfx_inc" "-I$gdextension_gen_include_dir" "-I$gdextension_dir"
-
-#     if($cxx.target.class == 'windows')
-#     {
-#         {hbmia obja}{*}: cxx.poptions += "-DTYPED_METHOD_BIND"
-#     }
-# }
