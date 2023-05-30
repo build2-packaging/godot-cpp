@@ -38,7 +38,8 @@ private_include_dirs = "-I$out_pfx_src" "-I$src_pfx_src" "-I$gdextension_gen_src
 
 cxx.poptions =+ $public_include_dirs $private_include_dirs
 
-{hbmia obja}{*}: cxx.poptions += -DGODOT_CPP_STATIC_BUILD # FIXME: REPLACE THIS OR DELETE IT?
+if($cxx.id.type == 'gcc')
+    {hbmia obja}{*}: cc.poptions += -fpic -fPIC
 
 if($cxx.target.class == 'windows')
 {
