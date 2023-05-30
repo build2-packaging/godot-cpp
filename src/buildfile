@@ -119,6 +119,8 @@ file{generate_gdextension_cpp_bindings.py}: file{print_file_list.py}
 }}
 
 gen_cxx{godot} : file{print_file_list.py} file{generate_gdextension_cpp_bindings.py} fsdir{gen}
+
+gen_cxx{~'/(.+)/'}:
 {{
     gen_files_list_script_path = $path($<[0])
     generator_script_path = $path($<[1])
