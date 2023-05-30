@@ -36,16 +36,20 @@ public_include_dirs = "-I$out_pfx_inc" "-I$src_pfx_inc" \
 
 private_include_dirs = "-I$out_pfx_src" "-I$src_pfx_src" "-I$gdextension_gen_src_dir"
 
-
 cxx.poptions =+ $public_include_dirs $private_include_dirs
 
 {hbmia obja}{*}: cxx.poptions += -DGODOT_CPP_STATIC_BUILD # FIXME: REPLACE THIS OR DELETE IT?
+
+if($cxx.target.class == 'windows')
+{
+    {hbmia obja}{*}: cxx.poptions += "-DTYPED_METHOD_BIND"
+}
 
 # Export options.
 #
 liba{godot-cpp}:
 {
-    cxx.export.poptions = $public_include_dirs
+    cxx.export.poptions = $public_include_dirs "-DTYPED_METHOD_BIND"
     cxx.export.libs = $intf_libs
 }
 
@@ -141,4 +145,9 @@ $out_root/gen/src/
     gdextension_dir = [dir_path] $src_root/upstream/gdextension/
 
     cc.poptions += "-I$src_pfx_inc" "-I$out_pfx_inc" "-I$gdextension_gen_include_dir" "-I$gdextension_dir"
+
+    if($cxx.target.class == 'windows')
+    {
+        {hbmia obja}{*}: cxx.poptions += "-DTYPED_METHOD_BIND"
+    }
 }
