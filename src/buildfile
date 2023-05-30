@@ -85,7 +85,7 @@ file{binding_generator.py}:
 
 file{print_file_list.py}: file{binding_generator.py}
 {{
-    diag python $>
+    diag $python_exe $>
     api_json = $regex.replace($gdextension_api_json, "\\\\", "\\\\\\\\")
     gen_dir = $regex.replace($out_base, "\\\\", "\\\\\\\\")
     script = $path($>)
@@ -98,7 +98,7 @@ file{print_file_list.py}: file{binding_generator.py}
 
 file{generate_gdextension_cpp_bindings.py}: file{print_file_list.py}
 {{
-    diag python $>
+    diag $python_exe $>
     api_json=$regex.replace($gdextension_api_json, "\\\\", "\\\\\\\\")
     gen_dir=$regex.replace($out_base, "\\\\", "\\\\\\\\")
     echo "import binding_generator" > $path($>)
@@ -130,11 +130,11 @@ gen_cxx{~'/(.+)/'}:
     # Make sure all generated files are considered output targets
     depdb dyndep --dyn-target --format lines --file $gen_files_list_file -- \
         mkdir -p $temp_dir && \
-        python $gen_files_list_script_path | sed -e "s/;/\n/g" > $gen_files_list_file
+        $python_exe $gen_files_list_script_path | sed -e "s/;/\n/g" > $gen_files_list_file
 
-    diag python $>
+    diag $python_exe $>
 
     echo "==== Generating GDExtension C++ API files ... \(listed before\) ===="
-    python $generator_script_path
+    $python_exe $generator_script_path
     echo "==== Generating GDExtension C++ API files - DONE ===="
 }}

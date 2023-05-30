@@ -18,3 +18,9 @@ hxx{*}: cxx.importable = true
 # The test target for cross-testing (running tests under Wine, etc).
 #
 test.target = $cxx.target
+
+python_exe = [string] "python3"
+
+if($cxx.target.class == 'windows')
+    python_exe = "python"
+
