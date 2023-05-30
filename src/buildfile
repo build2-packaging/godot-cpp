@@ -17,8 +17,12 @@ gdextension_gen_include_dir = [dir_path] $out_root/gen/include/
 gdextension_gen_src_dir = [dir_path] $out_root/gen/src/
 
 # Private headers and sources as well as dependencies.
-#
-liba{godot-cpp}: {hxx ixx txx cxx}{**} hxx{gdextension_files_were_generated} $impl_libs $intf_libs
+
+define [see_through] gen_cxx: group
+
+liba{godot-cpp}: {hxx ixx txx cxx}{** -gen/**} \
+                 gen_cxx{godot} \
+                 $impl_libs $intf_libs
 
 # Build options.
 #
@@ -35,10 +39,10 @@ cxx.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
 
 # Export options.
 #
-lib{godot-cpp}:
+liba{godot-cpp}:
 {
-  cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc" "-I$gdextension_dir" "-I$gdextension_gen_include_dir" "-I$gdextension_gen_src_dir"
-  cxx.export.libs = $intf_libs
+    cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc" "-I$gdextension_dir" "-I$gdextension_gen_include_dir" "-I$gdextension_gen_src_dir"
+    cxx.export.libs = $intf_libs
 }
 
 liba{godot-cpp}: cxx.export.poptions += -DGODOT_CPP_STATIC # FIXME: REPLACE THIS OR DELETE IT?
@@ -48,9 +52,9 @@ liba{godot-cpp}: cxx.export.poptions += -DGODOT_CPP_STATIC # FIXME: REPLACE THIS
 # for details on the version.* variable values.
 #
 if $version.pre_release
-  liba{godot-cpp}: bin.lib.version = "-$version.project_id"
+    liba{godot-cpp}: bin.lib.version = "-$version.project_id"
 else
-  liba{godot-cpp}: bin.lib.version = "-$version.major.$version.minor"
+    liba{godot-cpp}: bin.lib.version = "-$version.major.$version.minor"
 
 # Don't install private headers.
 #
@@ -71,18 +75,17 @@ file{binding_generator.py}:
     cp $src_root/upstream/binding_generator.py $path($>)
 }}
 
-<file{print_file_list.py} file{generated_file_list.txt}>: file{binding_generator.py}
+file{print_file_list.py}: file{binding_generator.py}
 {{
     diag python $>
-    api_json=$regex.replace($gdextension_api_json, "\\\\", "\\\\\\\\")
-    gen_dir=$regex.replace($out_root, "\\\\", "\\\\\\\\")
-    script=$path($>[0])
-    file_list=$path($>[1])
+    api_json = $regex.replace($gdextension_api_json, "\\\\", "\\\\\\\\")
+    gen_dir = $regex.replace($out_root, "\\\\", "\\\\\\\\")
+    script = $path($>)
+
     echo "import binding_generator" > $script
     echo "gdextension_api_json = \"$api_json\"" >> $script
     echo "out_dir = \"$gen_dir\"" >> $script
     echo "binding_generator.print_file_list\(gdextension_api_json, out_dir, headers=True, sources=True\)" >> $script
-    python $script > $file_list
 }}
 
 file{generate_gdextension_cpp_bindings.py}: file{print_file_list.py}
@@ -107,14 +110,20 @@ file{generate_gdextension_cpp_bindings.py}: file{print_file_list.py}
 
 }}
 
-hxx{gdextension_files_were_generated}: file{generate_gdextension_cpp_bindings.py} file{generated_file_list.txt}
+gen_cxx{godot} : file{print_file_list.py} file{generate_gdextension_cpp_bindings.py} fsdir{gen}
 {{
+    gen_files_list_script_path = $path($<[0])
+    generator_script_path = $path($<[1])
+    temp_dir = $out_root/temp
+    gen_files_list_file = $temp_dir/generated_files_list.txt
+
+    # Make sure all generated files are considered output targets
+    depdb dyndep --dyn-target --format lines --file $gen_files_list_file -- \
+        mkdir -p $temp_dir && \
+        python $gen_files_list_script_path | sed -e "s/;/\n/g" > $gen_files_list_file
+
     diag python $>
 
-    echo "==== Generating GDExtension C++ API files: ===="
-    cat $path($<[1])
-
-    python $path($<[0])
-
-    echo "// header just used to check that GDExtension files were generated, ignore me" > $path($>)
+    echo "==== Generating GDExtension C++ API files \(listed before\) ===="
+    python $generator_script_path
 }}
