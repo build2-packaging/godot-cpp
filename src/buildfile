@@ -13,8 +13,8 @@ pub_hdrs = $($pub/ pub_hdrs)
 ./ : liba{godot-cpp}: $pub/{$pub_hdrs}
 
 gdextension_dir = [dir_path] $src_root/upstream/gdextension/
-gdextension_gen_include_dir = [dir_path] $out_root/gen/include/
-gdextension_gen_src_dir = [dir_path] $out_root/gen/src/
+gdextension_gen_include_dir = [dir_path] $out_base/gen/include/
+gdextension_gen_src_dir = [dir_path] $out_base/gen/src/
 
 # Private headers and sources as well as dependencies.
 
@@ -87,7 +87,7 @@ file{print_file_list.py}: file{binding_generator.py}
 {{
     diag python $>
     api_json = $regex.replace($gdextension_api_json, "\\\\", "\\\\\\\\")
-    gen_dir = $regex.replace($out_root, "\\\\", "\\\\\\\\")
+    gen_dir = $regex.replace($out_base, "\\\\", "\\\\\\\\")
     script = $path($>)
 
     echo "import binding_generator" > $script
@@ -100,7 +100,7 @@ file{generate_gdextension_cpp_bindings.py}: file{print_file_list.py}
 {{
     diag python $>
     api_json=$regex.replace($gdextension_api_json, "\\\\", "\\\\\\\\")
-    gen_dir=$regex.replace($out_root, "\\\\", "\\\\\\\\")
+    gen_dir=$regex.replace($out_base, "\\\\", "\\\\\\\\")
     echo "import binding_generator" > $path($>)
     echo "gdextension_api_json = \"$api_json\"" >> $path($>)
     echo "out_dir = \"$gen_dir\"" >> $path($>)
@@ -122,7 +122,7 @@ gen_cxx{godot} : file{print_file_list.py} file{generate_gdextension_cpp_bindings
 {{
     gen_files_list_script_path = $path($<[0])
     generator_script_path = $path($<[1])
-    temp_dir = $out_root/temp
+    temp_dir = $out_base/temp
     gen_files_list_file = $temp_dir/generated_files_list.txt
 
     # Make sure all generated files are considered output targets
@@ -137,17 +137,17 @@ gen_cxx{godot} : file{print_file_list.py} file{generate_gdextension_cpp_bindings
     echo "==== Generating GDExtension C++ API files - DONE ===="
 }}
 
-$out_root/gen/src/
-{
-    out_pfx_inc = [dir_path] $out_root/include/
-    src_pfx_inc = [dir_path] $src_root/include/
-    gdextension_gen_include_dir = [dir_path] $out_root/gen/include/
-    gdextension_dir = [dir_path] $src_root/upstream/gdextension/
+# $out_root/gen/src/
+# {
+#     out_pfx_inc = [dir_path] $out_root/include/
+#     src_pfx_inc = [dir_path] $src_root/include/
+#     gdextension_gen_include_dir = [dir_path] $out_root/gen/include/
+#     gdextension_dir = [dir_path] $src_root/upstream/gdextension/
 
-    cc.poptions += "-I$src_pfx_inc" "-I$out_pfx_inc" "-I$gdextension_gen_include_dir" "-I$gdextension_dir"
+#     cc.poptions += "-I$src_pfx_inc" "-I$out_pfx_inc" "-I$gdextension_gen_include_dir" "-I$gdextension_dir"
 
-    if($cxx.target.class == 'windows')
-    {
-        {hbmia obja}{*}: cxx.poptions += "-DTYPED_METHOD_BIND"
-    }
-}
+#     if($cxx.target.class == 'windows')
+#     {
+#         {hbmia obja}{*}: cxx.poptions += "-DTYPED_METHOD_BIND"
+#     }
+# }
