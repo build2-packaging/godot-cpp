@@ -124,6 +124,7 @@ gen_cxx{godot} : file{print_file_list.py} file{generate_gdextension_cpp_bindings
 
     diag python $>
 
-    echo "==== Generating GDExtension C++ API files \(listed before\) ===="
+    echo "==== Generating GDExtension C++ API files ... \(listed before\) ===="
     python $generator_script_path
+    echo "==== Generating GDExtension C++ API files - DONE ===="
 }}
