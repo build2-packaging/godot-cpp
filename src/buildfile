@@ -75,8 +75,6 @@ else
 # Generate Godot C++ Bindings for GDExtension
 # See ./upstream/CMakeLists.txt `GENERATED_FILES_LIST` for details
 
-# FIXME: review and fix these scripts... in particular the generation of hxx/cxx not being taken into account as target names/output
-
 gdextension_api_json = [path] $src_root/upstream/gdextension/extension_api.json
 
 file{binding_generator.py}:
@@ -87,8 +85,8 @@ file{binding_generator.py}:
 file{print_file_list.py}: file{binding_generator.py}
 {{
     diag $python_exe $>
-    api_json = $regex.replace($gdextension_api_json, "\\\\", "\\\\\\\\")
-    gen_dir = $regex.replace($out_base, "\\\\", "\\\\\\\\")
+    api_json = $posix_string($gdextension_api_json)
+    gen_dir = $posix_string($out_base)
     script = $path($>)
 
     echo "import binding_generator" > $script
@@ -100,8 +98,8 @@ file{print_file_list.py}: file{binding_generator.py}
 file{generate_gdextension_cpp_bindings.py}: file{print_file_list.py}
 {{
     diag $python_exe $>
-    api_json=$regex.replace($gdextension_api_json, "\\\\", "\\\\\\\\")
-    gen_dir=$regex.replace($out_base, "\\\\", "\\\\\\\\")
+    api_json=$posix_string($gdextension_api_json)
+    gen_dir=$posix_string($out_base)
     echo "import binding_generator" > $path($>)
     echo "gdextension_api_json = \"$api_json\"" >> $path($>)
     echo "out_dir = \"$gen_dir\"" >> $path($>)
