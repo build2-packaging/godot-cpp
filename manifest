@@ -1,6 +1,6 @@
 : 1
 name: godot-cpp
-version: 4.1.0-b.2
+version: 4.1.0
 type: lib
 language: c++
 summary: C++ bindings for the Godot Engine's GDExtensions API
@@ -17,4 +17,4 @@ depends: * build2 >= 0.16.0
 depends: * bpkg >= 0.16.0
 
 requires: python >= 3.4 ; Python 3 used for generator scripts
-requires: Godot == $    ; Godot is required to run the tests
+requires: godot == $    ; Godot is required to run the tests
