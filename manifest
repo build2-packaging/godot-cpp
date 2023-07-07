@@ -19,3 +19,7 @@ depends: * bpkg >= 0.16.0
 
 requires: python >= 3.4 ; Python 3 used for generator scripts
 requires: godot == $    ; Godot is required to run the tests
+
+builds: latest ; Requires recent compiler versions
+latest-build-config: ?sys:python3 ; Python >= 3.4 required for code generation
+
