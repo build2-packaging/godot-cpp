@@ -17,9 +17,9 @@ package-email: mjklaim@gmail.com
 depends: * build2 >= 0.16.0
 depends: * bpkg >= 0.16.0
 
-requires: python >= 3.4 ; Python 3 used for generator scripts
-requires: godot == $    ; Godot is required to run the tests
+requires: python ^3.4.0   ; Pyhthon must be accessible in the environment
+requires: godot == $    ; A compatible version of Godot is required to run the tests
 
-builds: latest ; Requires recent compiler versions
-latest-build-config: ?sys:python3 ; Python >= 3.4 required for code generation
-
+builds: latest ; Requires recent compiler versions.
+builds: -windows -macos ; Works but CI can't use system package manager for these platforms.
+latest-build-config: ?sys:python/*  ; Python >= 3.4 required for code generation.

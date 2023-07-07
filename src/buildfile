@@ -1,3 +1,4 @@
+
 intf_libs = # Interface dependencies.
 impl_libs = # Implementation dependencies.
 #import xxxx_libs += libhello%lib{hello}
@@ -76,6 +77,23 @@ else
 # See ./upstream/CMakeLists.txt `GENERATED_FILES_LIST` for details
 # Note that the following setup makes sure the necessary generator scripts files
 # are requirements for the library target, so they will end up in the source package.
+
+## Deduce Python executable used for source generation ####
+if! $defined(config.python)
+  import? python = python%exe{python3}
+else
+  python = [null]
+
+if ($python == [null])
+  import! python = python%exe{python}
+
+./ : $python
+{{
+  diag 'python --version' $python
+  $python --version
+}}
+
+python_exe = $path($python)
 
 gdextension_api_json = $src_root/upstream/gdextension/file{extension_api.json} # TODO: make this a value set through options, to enable generarting code for a custom Godot Engine build
 gdextension_api_c = $src_root/upstream/gdextension/h{gdextension_interface} # TODO: make this a value set through options, to enable generarting code for a custom Godot Engine build
