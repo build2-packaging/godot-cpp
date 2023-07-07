@@ -15,6 +15,10 @@ cxx{*}: extension = cpp
 #
 hxx{*}: cxx.importable = true
 
+# Make sure we can use C files too
+using c
+
+
 # The test target for cross-testing (running tests under Wine, etc).
 #
 test.target = $cxx.target

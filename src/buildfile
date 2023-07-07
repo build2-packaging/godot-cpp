@@ -74,18 +74,22 @@ else
 ########################################################################
 # Generate Godot C++ Bindings for GDExtension
 # See ./upstream/CMakeLists.txt `GENERATED_FILES_LIST` for details
+# Note that the following setup makes sure the necessary generator scripts files
+# are requirements for the library target, so they will end up in the source package.
 
-gdextension_api_json = [path] $src_root/upstream/gdextension/extension_api.json
+gdextension_api_json = $src_root/upstream/gdextension/file{extension_api.json} # TODO: make this a value set through options, to enable generarting code for a custom Godot Engine build
+gdextension_api_c = $src_root/upstream/gdextension/h{gdextension_interface} # TODO: make this a value set through options, to enable generarting code for a custom Godot Engine build
+generator_script = $src_root/upstream/file{binding_generator.py}
 
-file{binding_generator.py}:
+file{binding_generator.py}: $generator_script
 {{
-    cp $src_root/upstream/binding_generator.py $path($>)
+    cp $path($<) $path($>)
 }}
 
-file{print_file_list.py}: file{binding_generator.py}
+file{print_file_list.py}: file{binding_generator.py} $gdextension_api_json
 {{
     diag $python_exe $>
-    api_json = $posix_string($gdextension_api_json)
+    api_json = $posix_string($path($<[1]))
     gen_dir = $posix_string($out_base)
     script = $path($>)
 
@@ -95,10 +99,10 @@ file{print_file_list.py}: file{binding_generator.py}
     echo "binding_generator.print_file_list\(gdextension_api_json, out_dir, headers=True, sources=True\)" >> $script
 }}
 
-file{generate_gdextension_cpp_bindings.py}: file{print_file_list.py}
+file{generate_gdextension_cpp_bindings.py}: file{print_file_list.py} $gdextension_api_json
 {{
     diag $python_exe $>
-    api_json=$posix_string($gdextension_api_json)
+    api_json = $posix_string($path($<[1]))
     gen_dir=$posix_string($out_base)
     echo "import binding_generator" > $path($>)
     echo "gdextension_api_json = \"$api_json\"" >> $path($>)
@@ -117,7 +121,7 @@ file{generate_gdextension_cpp_bindings.py}: file{print_file_list.py}
 
 }}
 
-gen_cxx{godot} : file{print_file_list.py} file{generate_gdextension_cpp_bindings.py} fsdir{gen}
+gen_cxx{godot} : file{print_file_list.py} file{generate_gdextension_cpp_bindings.py} fsdir{gen} $gdextension_api_c
 
 gen_cxx{~'/(.+)/'}:
 {{
