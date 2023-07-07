@@ -6,7 +6,7 @@ This is the `build2` package for [`godot-cpp`](https://github.com/godotengine/go
 
 ## Requirements
 
-This package requires the presence of `python >= 3.10` in the environment. (https://github.com/Klaim/build2-godot-cpp/issues/1), used to run a code generator script.
+This package requires the presence of `python >= 3.4` in the environment (https://github.com/Klaim/build2-godot-cpp/issues/1), used to run a code generator script before building the library.
 
 # Importable Targets
 
