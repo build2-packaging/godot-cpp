@@ -5,7 +5,8 @@ type: lib
 language: c++
 summary: C++ bindings for the Godot Engine's GDExtensions API
 license: MIT
-description-file: README.md
+description-file: upstream/README.md
+package-description-file: README.md
 url: https://github.com/godotengine/godot-cpp
 doc-url: https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/index.html
 package-url: https://github.com/godotengine/godot-cpp
