@@ -23,3 +23,9 @@ using c
 #
 test.target = $cxx.target
 
+############################################
+# godot-cpp options
+
+config [bool] config.godot_cpp.enable_hot_reload ?= true
+
+

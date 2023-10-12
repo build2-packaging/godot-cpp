@@ -39,12 +39,23 @@ private_include_dirs = "-I$out_pfx_src" "-I$src_pfx_src" "-I$gdextension_gen_src
 
 cxx.poptions =+ $public_include_dirs $private_include_dirs
 
-if($cxx.id.type == 'gcc')
-    {hbmia obja}{*}: cc.poptions += -fpic -fPIC
-
 if($cxx.target.class == 'windows')
 {
     {hbmia obja}{*}: cxx.poptions += "-DTYPED_METHOD_BIND"
+}
+else
+{
+    {hbmia obja}{*}: cc.poptions += -fpic -fPIC
+}
+
+if($config.godot_cpp.enable_hot_reload)
+{
+    {hbmia obja}{*}: cc.poptions += -DHOT_RELOAD_ENABLED
+
+    if($cxx.id.type != 'msvc')
+    {
+        {hbmia obja}{*}: cc.poptions += -fno-gnu-unique
+    }
 }
 
 # Export options.
@@ -56,6 +67,11 @@ liba{godot-cpp}:
 }
 
 liba{godot-cpp}: cxx.export.poptions += -DGODOT_CPP_STATIC # FIXME: REPLACE THIS OR DELETE IT?
+
+if($config.godot_cpp.enable_hot_reload)
+{
+    liba{godot-cpp}: cxx.export.poptions += -DHOT_RELOAD_ENABLED
+}
 
 # For pre-releases use the complete version to make sure they cannot be used
 # in place of another pre-release or the final version. See the version module
@@ -69,7 +85,6 @@ else
 # Don't install private headers.
 #
 {hxx ixx txx}{*}: install = false
-
 
 
 ########################################################################
@@ -114,6 +129,12 @@ file{print_file_list.py}: file{binding_generator.py} $gdextension_api_json
     echo "import binding_generator" > $script
     echo "gdextension_api_json = \"$api_json\"" >> $script
     echo "out_dir = \"$gen_dir\"" >> $script
+
+    if ($config.godot_cpp.enable_hot_reload)
+        echo "import os" >> $script
+        echo "os.environ['use_hot_reload'] = 'True'" >> $script
+    end
+
     echo "binding_generator.print_file_list\(gdextension_api_json, out_dir, headers=True, sources=True\)" >> $script
 }}
 
@@ -134,6 +155,11 @@ file{generate_gdextension_cpp_bindings.py}: file{print_file_list.py} $gdextensio
 
     # FIXME: should be an option, see FLOAT_PRECISION in upstream/CMakeLists.txt
     echo "float_precision = \"single\"" >> $path($>)
+
+    if ($config.godot_cpp.enable_hot_reload)
+        echo "import os" >> $path($>)
+        echo "os.environ['use_hot_reload'] = 'True'" >> $path($>)
+    end
 
     echo "binding_generator.generate_bindings\(gdextension_api_json, generate_template_bindings, arch_bits, float_precision, out_dir\)" >> $path($>)
 
