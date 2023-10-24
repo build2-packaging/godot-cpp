@@ -52,7 +52,7 @@ if($config.godot_cpp.enable_hot_reload)
 {
     {hbmia obja}{*}: cc.poptions += -DHOT_RELOAD_ENABLED
 
-    if($cxx.id.type != 'msvc')
+    if($cxx.id.type == 'gcc')
     {
         {hbmia obja}{*}: cc.poptions += -fno-gnu-unique
     }
