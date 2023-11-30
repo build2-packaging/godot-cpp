@@ -27,7 +27,7 @@ If you want to use a custom build of the Godot Engine: TODO: we currently don't 
 
 ## Configuration Options
 
-- `config.godot_cpp.enable_hot_reload` (default: `true`) : Enables hot-reloading when using the Godot Engine Editor starting with versions 4.2-dev6. If `true`, you must also set `reloadable = true` in the `.gdextension` file going with your GDExtension to enable the feature. When the GDExtension binary file is changed, the editor will attempt to hot-reload it the next time it's windows acquires focus. This behavior will fail if your GDExtension was not built with this option and there will be no attempt if `reloadable = true` was not set in the `.gdextension` file.
+- `config.godot_cpp.enable_hot_reload` (default: `true`) : Enables hot-reloading when using the Godot Engine Editor starting with versions 4.2. If `true`, you must also set `reloadable = true` in the `.gdextension` file going with your GDExtension to enable the feature. When the GDExtension binary file is changed, the editor will attempt to hot-reload it the next time it's windows acquires focus. This behavior will fail if your GDExtension was not built with this option and there will be no attempt if `reloadable = true` was not set in the `.gdextension` file.
 
 TODO: The other options are not supported yet, see https://github.com/Klaim/build2-godot-cpp/issues/7
 
