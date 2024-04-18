@@ -1,6 +1,6 @@
 : 1
 name: godot-cpp
-version: 4.1.4-a.0.z
+version: 4.1.4
 type: lib
 language: c++
 summary: C++ bindings for the Godot Engine's GDExtensions API
