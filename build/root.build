@@ -1,3 +1,11 @@
+
+############################################
+# godot-cpp options
+
+config [bool] config.godot_cpp.enable_hot_reload ?= true
+config [bool] config.godot_cpp.generate_template_get_node ?= true
+
+
 # Uncomment to suppress warnings coming from external libraries.
 #
 #cxx.internal.scope = current
@@ -22,9 +30,5 @@ using c
 #
 test.target = $cxx.target
 
-############################################
-# godot-cpp options
-
-config [bool] config.godot_cpp.enable_hot_reload ?= true
 
 
