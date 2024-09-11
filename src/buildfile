@@ -45,7 +45,7 @@ if($cxx.target.class == 'windows')
 }
 else
 {
-    {hbmia obja}{*}: cc.poptions += -fpic -fPIC
+    {hbmia obja}{*}: cc.poptions += -fpic -fPIC -fvisibility=hidden
 }
 
 if($config.godot_cpp.enable_hot_reload)
