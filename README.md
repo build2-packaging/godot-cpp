@@ -16,7 +16,7 @@ This package requires the presence of `python >= 3.4` in the environment (https:
 
 # Usage
 
-- Make sure to be familiar with [how GDExtension works, see the official documentation](https://godotengine.org/).
+- Make sure to be familiar with [how GDExtension works, see the official documentation](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/index.html).
 - Your GDEXtension library must be a shared library (`libs`) as it will be loaded at runtime by Godot.
 
 ## Compatibility with Godot Engine
