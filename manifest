@@ -1,6 +1,6 @@
 : 1
 name: godot-cpp
-version: 4.4.0-a.5.z
+version: 4.4.0-a.5
 upstream-version: godot-4.4-dev4
 type: lib
 language: c++
