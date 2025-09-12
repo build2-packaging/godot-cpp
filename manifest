@@ -1,7 +1,7 @@
 : 1
 name: godot-cpp
-version: 4.5.0-b.7
-upstream-version: godot-4.5-beta7
+version: 4.5.0-b.9
+upstream-version: godot-4.5-rc2
 type: lib
 language: c++
 summary: C++ bindings for the Godot Engine's GDExtensions API
