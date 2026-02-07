@@ -19,7 +19,7 @@ depends: * build2 >= 0.16.0
 depends: * bpkg >= 0.16.0
 
 requires: python ^3.4.0   ; Pyhthon must be accessible in the environment
-requires: godot == $      ; A compatible version of Godot is required to run the tests
+requires: godot ^4.6.0    ; A compatible version of Godot is required to run the tests
 
 builds: latest ; Requires recent compiler versions.
 builds: -windows -macos ; Works but CI can't use system package manager for these platforms.
