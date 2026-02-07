@@ -21,7 +21,14 @@ This package requires the presence of `python >= 3.4` in the environment (https:
 
 ## Compatibility with Godot Engine
 
-When using this package, chose the version which matches your intended Godot Engine version. Otherwise, both API and ABI will not match as they are broken at each release.
+The version of `godot-cpp` to chose depends directly on which version of the Godot Engine executable (both editor and game) you use:
+
+- Godot <= `v4.5.0-stable` :
+    Chose the version which matches your intended Godot Engine version. Otherwise, both API and ABI will not match as they are broken at each release.
+
+- Godot >= `v4.6.0-stable` :
+    **[Starting with version 10.x, godot-cpp is versioned independently from Godot.](https://github.com/godotengine/godot-cpp?tab=readme-ov-file#versioning)** The godot-cpp version you choose has no bearing on which Godot versions it is compatible with.
+
 
 If you want to use a custom build of the Godot Engine: TODO: we currently don't support directly this scenario but [it is planned](https://github.com/Klaim/build2-godot-cpp/issues/6).
 

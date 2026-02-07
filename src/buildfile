@@ -111,12 +111,19 @@ if ($python == [null])
 python_exe = $path($python)
 
 gdextension_api_json = $src_root/upstream/gdextension/file{extension_api.json} # TODO: make this a value set through options, to enable generarting code for a custom Godot Engine build
-gdextension_api_c = $src_root/upstream/gdextension/h{gdextension_interface} # TODO: make this a value set through options, to enable generarting code for a custom Godot Engine build
+gdextension_interface_json = $src_root/upstream/gdextension/file{gdextension_interface.json} # TODO: make this a value set through options, to enable generarting code for a custom Godot Engine build
+
 generator_script = $src_root/upstream/file{binding_generator.py}
 
-file{binding_generator.py}: $generator_script
+
+file{make_interface_header.py}: $src_root/upstream/file{make_interface_header.py}
 {{
     cp $path($<) $path($>)
+}}
+
+file{binding_generator.py}: $generator_script file{make_interface_header.py}
+{{
+    cp $path($<[0]) $path($>)
 }}
 
 file{print_file_list.py}: file{binding_generator.py} $gdextension_api_json
@@ -138,13 +145,15 @@ file{print_file_list.py}: file{binding_generator.py} $gdextension_api_json
     echo "binding_generator.print_file_list\(gdextension_api_json, out_dir, headers=True, sources=True\)" >> $script
 }}
 
-file{generate_gdextension_cpp_bindings.py}: file{print_file_list.py} $gdextension_api_json
+file{generate_gdextension_cpp_bindings.py}: file{print_file_list.py} $gdextension_api_json $gdextension_interface_json
 {{
     diag $python_exe $>
     api_json = $posix_string($path($<[1]))
+    gdext_interface_json = $posix_string($path($<[2]))
     gen_dir=$posix_string($out_base)
     echo "import binding_generator" > $path($>)
     echo "gdextension_api_json = \"$api_json\"" >> $path($>)
+    echo "gdextension_interface_json = \"$gdext_interface_json\"" >> $path($>)
     echo "out_dir = \"$gen_dir\"" >> $path($>)
 
     # FIXME: should be deduced from configuration variables
@@ -161,11 +170,11 @@ file{generate_gdextension_cpp_bindings.py}: file{print_file_list.py} $gdextensio
         echo "os.environ['use_hot_reload'] = 'True'" >> $path($>)
     end
 
-    echo "binding_generator.generate_bindings\(gdextension_api_json, generate_template_bindings, arch_bits, float_precision, out_dir\)" >> $path($>)
+    echo "binding_generator.generate_bindings\(gdextension_api_json, gdextension_interface_json, generate_template_bindings, arch_bits, float_precision, out_dir\)" >> $path($>)
 
 }}
 
-gen_cxx{godot} : file{print_file_list.py} file{generate_gdextension_cpp_bindings.py} fsdir{gen} $gdextension_api_c
+gen_cxx{godot} : file{print_file_list.py} file{generate_gdextension_cpp_bindings.py} fsdir{gen}
 
 gen_cxx{~'/(.+)/'}:
 {{
