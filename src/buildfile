@@ -23,7 +23,8 @@ define [see_through] gen_cxx: group
 
 liba{godot-cpp}: {hxx ixx txx cxx}{** -gen/**} \
                  gen_cxx{godot} \
-                 $impl_libs $intf_libs
+                 $impl_libs $intf_libs \
+                 $gdextension_dir/file{*.json}
 
 # Build options.
 #
@@ -110,8 +111,8 @@ if ($python == [null])
 
 python_exe = $path($python)
 
-gdextension_api_json = $src_root/upstream/gdextension/file{extension_api.json} # TODO: make this a value set through options, to enable generarting code for a custom Godot Engine build
-gdextension_interface_json = $src_root/upstream/gdextension/file{gdextension_interface.json} # TODO: make this a value set through options, to enable generarting code for a custom Godot Engine build
+gdextension_api_json = $gdextension_dir/file{$target_godot_version_json_filename}
+gdextension_interface_json = $gdextension_dir/file{gdextension_interface.json} # TODO: make this a value set through options, to enable generarting code for a custom Godot Engine build
 
 generator_script = $src_root/upstream/file{binding_generator.py}
 

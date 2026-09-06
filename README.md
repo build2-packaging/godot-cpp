@@ -34,6 +34,12 @@ If you want to use a custom build of the Godot Engine: TODO: we currently don't 
 
 ## Configuration Options
 
+- `config.godot_cpp.target_godot_version` (no default value): Version of Godot that will be targeted as lowest version supported by the GDextension this library will be used to build. The version must be expressed as `X.Y` as only the minor version is important, for example:
+    ```
+    bdep init [...] config.godot_cpp.target_godot_version=4.3
+    ```
+    The minimum supported version is `4.3`. See `godot-cpp`'s documentation for details.
+
 - `config.godot_cpp.enable_hot_reload` (default: `true`) : Enables hot-reloading when using the Godot Engine Editor starting with versions 4.2. If `true`, you must also set `reloadable = true` in the `.gdextension` file going with your GDExtension to enable the feature. When the GDExtension binary file is changed, the editor will attempt to hot-reload it the next time it's windows acquires focus. This behavior will fail if your GDExtension was not built with this option and there will be no attempt if `reloadable = true` was not set in the `.gdextension` file.
 
 TODO: The other options are not supported yet, see https://github.com/Klaim/build2-godot-cpp/issues/7
