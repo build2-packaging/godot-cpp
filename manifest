@@ -1,7 +1,7 @@
 : 1
 name: godot-cpp
-version: 10.0.0-b.2.z
-upstream-version: 10.0.0-master-20240424-b05594e50f50fcfcd9640ae7e348a0844122a2c0
+version: 10.0.0-b.2
+upstream-version: 10.0.0-rc2
 type: lib
 language: c++
 summary: C++ bindings for the Godot Engine's GDExtensions API
@@ -10,7 +10,7 @@ description-file: upstream/README.md
 package-description-file: README.md
 url: https://github.com/godotengine/godot-cpp
 doc-url: https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/index.html
-package-url: https://github.com/godotengine/godot-cpp
+package-url: https://github.com/build2-packaging/godot-cpp/
 src-url: https://github.com/godotengine/godot-cpp
 
 package-email: mjklaim@gmail.com
@@ -19,7 +19,7 @@ depends: * build2 >= 0.16.0
 depends: * bpkg >= 0.16.0
 
 requires: python ^3.4.0   ; Pyhthon must be accessible in the environment
-requires: godot ^4.6.0    ; A compatible version of Godot is required to run the tests
+requires: godot ^4.3.0    ; A compatible version of Godot is required to run the tests
 
 builds: latest ; Requires recent compiler versions.
 builds: -windows -macos ; Works but CI can't use system package manager for these platforms.
