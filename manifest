@@ -1,6 +1,6 @@
 : 1
 name: godot-cpp
-version: 10.0.0-b.2
+version: 10.0.0-b.2+1
 upstream-version: 10.0.0-rc2
 type: lib
 language: c++

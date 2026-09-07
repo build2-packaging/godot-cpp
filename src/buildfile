@@ -3,6 +3,17 @@ intf_libs = # Interface dependencies.
 impl_libs = # Implementation dependencies.
 #import xxxx_libs += libhello%lib{hello}
 
+# Check the godot version
+if! $find($supported_godot_versions, $config.godot_cpp.target_godot_version)
+{
+    fail "`config.godot_cpp.target_godot_version` \(currently `($config.godot_cpp.target_godot_version)`\) must be set to one of the supported values: $quote($supported_godot_versions, true)"
+}
+
+# 4.3 -> extension_api-4-3.json , etc.
+target_godot_version_with_dash = $replace($config.godot_cpp.target_godot_version, ".", "-")
+target_godot_version_json_filename = "extension_api-($target_godot_version_with_dash).json"
+
+
 # Public headers.
 #
 pub = [dir_path] ../include/
